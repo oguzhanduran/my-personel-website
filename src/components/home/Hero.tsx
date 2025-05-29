@@ -129,7 +129,7 @@ const Hero = () => {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="grid grid-cols-5 sm:flex sm:flex-wrap justify-center gap-1 sm:gap-4 backdrop-blur-md bg-white/5 py-2 px-1 sm:p-3 rounded-xl w-full border border-white/10"
+                    className="grid grid-cols-5 sm:flex sm:flex-wrap justify-center gap-1 sm:gap-4 bg-black/10 backdrop-blur-md py-2 px-1 sm:p-3 rounded-xl w-full border border-white/10"
                   >
                     {socialLinks.map((social, index) => (
                       <motion.a
@@ -143,7 +143,7 @@ const Hero = () => {
                         whileHover="hover"
                         whileTap="tap"
                         custom={index}
-                        className="relative group flex flex-col items-center justify-center p-2 hover:bg-white/5 rounded-lg transition-colors"
+                        className="relative group flex flex-col items-center justify-center p-2 hover:bg-black/10 rounded-lg transition-colors"
                       >
                         <social.icon className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 group-hover:text-cyan-400 transition-colors duration-300" />
                         <span className="text-[10px] sm:text-xs text-blue-400 group-hover:text-cyan-400 mt-1 transition-colors duration-300">
