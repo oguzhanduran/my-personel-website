@@ -84,40 +84,53 @@ const Hero = () => {
   };
 
   return (
-    <section className="min-h-screen flex items-center">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
+    <section className="min-h-[100svh] flex items-center justify-center py-4 px-3 sm:py-0 sm:px-4">
+      <div className="container">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex flex-col items-center md:items-start text-center md:text-left backdrop-blur-sm bg-white/5 rounded-2xl p-4 md:p-8 shadow-lg order-2 md:order-1"
+            className="flex flex-col items-center md:items-start text-center md:text-left backdrop-blur-md bg-white/5 rounded-2xl p-5 shadow-lg order-2 md:order-1 border border-white/10"
           >
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 md:mb-6 bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-500 bg-clip-text text-transparent animate-shine">
-              {text}
-              <motion.span
-                animate={{ opacity: [0, 1, 0] }}
-                transition={{ duration: 0.8, repeat: Infinity }}
-                className="inline-block ml-1"
-              >
-                |
-              </motion.span>
-            </h1>
-            <p className="text-base sm:text-lg md:text-xl font-medium bg-gradient-to-r from-blue-300 via-cyan-300 to-purple-400 bg-clip-text text-transparent animate-shine mb-4 md:mb-8 max-w-2xl">
-              Building innovative solutions at the intersection of AI and web technology.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 w-full sm:w-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="w-full"
+            >
+              <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-2 md:mb-6 bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-500 bg-clip-text text-transparent animate-shine">
+                {text}
+                <motion.span
+                  animate={{ opacity: [0, 1, 0] }}
+                  transition={{ duration: 0.8, repeat: Infinity }}
+                  className="inline-block ml-1"
+                >
+                  |
+                </motion.span>
+              </h1>
+              <p className="text-sm sm:text-base md:text-xl font-medium bg-gradient-to-r from-blue-300 via-cyan-300 to-purple-400 bg-clip-text text-transparent animate-shine mb-4 max-w-2xl mx-auto md:mx-0">
+                Building innovative solutions at the intersection of AI and web technology.
+              </p>
+            </motion.div>
+
+            <div className="flex flex-col w-full gap-3">
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-gradient-to-r from-blue-500 via-cyan-500 to-purple-600 text-white px-6 md:px-8 py-2.5 md:py-3 rounded-lg hover:opacity-90 transition-all duration-300 shadow-lg hover:shadow-blue-500/25 w-full sm:w-auto text-sm md:text-base"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="bg-gradient-to-r from-blue-500 via-cyan-500 to-purple-600 text-white px-6 py-2.5 rounded-xl hover:opacity-90 transition-all duration-300 shadow-lg hover:shadow-blue-500/25 w-full text-sm sm:text-base backdrop-blur-sm"
                 onClick={() => setShowSocials(!showSocials)}
               >
                 Get in Touch
               </motion.button>
               <AnimatePresence>
                 {showSocials && (
-                  <div className="flex flex-wrap justify-center gap-4 md:gap-6 backdrop-blur-sm bg-white/5 p-3 md:p-4 rounded-xl w-full sm:w-auto">
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="grid grid-cols-5 sm:flex sm:flex-wrap justify-center gap-1 sm:gap-4 backdrop-blur-md bg-white/5 py-2 px-1 sm:p-3 rounded-xl w-full border border-white/10"
+                  >
                     {socialLinks.map((social, index) => (
                       <motion.a
                         key={social.name}
@@ -129,26 +142,16 @@ const Hero = () => {
                         animate="visible"
                         whileHover="hover"
                         whileTap="tap"
-                        exit={{ opacity: 0, y: 20, transition: { duration: 0.3 } }}
                         custom={index}
-                        className="relative group"
+                        className="relative group flex flex-col items-center justify-center p-2 hover:bg-white/5 rounded-lg transition-colors"
                       >
-                        <div className={`absolute -inset-1.5 md:-inset-2 bg-gradient-to-r ${social.gradient} rounded-lg blur opacity-0 group-hover:opacity-50 transition duration-300`}></div>
-                        <div className="relative">
-                          <social.icon className="w-5 h-5 md:w-7 md:h-7 text-blue-400 group-hover:text-cyan-400 transition-colors duration-300" />
-                          <motion.span
-                            initial={{ opacity: 0, y: 10 }}
-                            whileHover={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.2 }}
-                            className="absolute -bottom-4 md:-bottom-6 left-1/2 transform -translate-x-1/2 text-[10px] md:text-xs text-blue-400 group-hover:text-cyan-400 whitespace-nowrap transition-colors duration-300"
-                          >
-                            {social.name}
-                          </motion.span>
-                        </div>
-                        <span className="sr-only">{social.name}</span>
+                        <social.icon className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 group-hover:text-cyan-400 transition-colors duration-300" />
+                        <span className="text-[10px] sm:text-xs text-blue-400 group-hover:text-cyan-400 mt-1 transition-colors duration-300">
+                          {social.name}
+                        </span>
                       </motion.a>
                     ))}
-                  </div>
+                  </motion.div>
                 )}
               </AnimatePresence>
             </div>
@@ -158,9 +161,13 @@ const Hero = () => {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="relative order-1 md:order-2 backdrop-blur-sm bg-white/5 rounded-2xl p-4 md:p-8 mb-4 md:mb-0"
+            className="relative order-1 md:order-2 backdrop-blur-md bg-white/5 rounded-2xl p-4 mb-3 md:mb-0 border border-white/10"
           >
-            <div className="aspect-square relative rounded-full overflow-hidden border-4 border-transparent bg-gradient-to-r from-blue-500 via-cyan-500 to-purple-600 p-1 shadow-xl max-w-[200px] sm:max-w-[280px] md:max-w-md mx-auto group transition-all duration-300 hover:shadow-blue-500/25">
+            <motion.div 
+              className="aspect-square relative rounded-full overflow-hidden border-4 border-transparent bg-gradient-to-r from-blue-500 via-cyan-500 to-purple-600 p-1 shadow-xl max-w-[160px] sm:max-w-[280px] md:max-w-md mx-auto"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3 }}
+            >
               <div className="rounded-full overflow-hidden">
                 <Image
                   src="/profile.png"
@@ -170,7 +177,7 @@ const Hero = () => {
                   priority
                 />
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>
