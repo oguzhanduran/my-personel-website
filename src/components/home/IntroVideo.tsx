@@ -227,13 +227,25 @@ const IntroVideo = ({ onEnd }: IntroVideoProps) => {
               >
                 <source src="/intro.mp4" type="video/mp4" />
               </motion.video>
-              
-              <button
-                onClick={toggleMute}
-                className="absolute bottom-4 right-4 p-2 rounded-full bg-black/50 hover:bg-black/70 transition-colors text-white z-10"
-              >
-                {isMuted ? <FaVolumeMute size={18} /> : <FaVolumeUp size={18} />}
-              </button>
+
+              <div className="absolute bottom-4 w-full flex items-center justify-between px-4">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="text-[#00A3FF] text-lg md:text-xl font-medium tracking-wide"
+                  style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
+                >
+                  Redirecting to the website...
+                </motion.div>
+
+                <button
+                  onClick={toggleMute}
+                  className="p-2 rounded-full bg-black/50 hover:bg-black/70 transition-colors text-white"
+                >
+                  {isMuted ? <FaVolumeMute size={18} /> : <FaVolumeUp size={18} />}
+                </button>
+              </div>
             </div>
           </motion.div>
         </motion.div>
