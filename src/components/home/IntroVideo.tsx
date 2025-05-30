@@ -104,7 +104,7 @@ const IntroVideo = () => {
       {showVideo && (
         <motion.div
           initial={{ 
-            opacity: 1,
+            opacity: 0,
             backgroundColor: 'rgba(0, 0, 0, 1)' 
           }}
           animate={{ 
@@ -113,10 +113,14 @@ const IntroVideo = () => {
           }}
           exit={{ 
             opacity: 0,
-            transition: { duration: 1.5 }
+            filter: 'blur(10px)',
+            transition: { 
+              duration: 1.5,
+              ease: "easeInOut"
+            }
           }}
           transition={{ 
-            duration: 2,
+            duration: 1.5,
             backgroundColor: {
               duration: 2.5,
               ease: "easeInOut"
@@ -126,23 +130,54 @@ const IntroVideo = () => {
         >
           <motion.div 
             className="relative w-full h-full"
-            initial={{ scale: 1 }}
+            initial={{ 
+              scale: 1,
+              opacity: 0,
+              rotate: -2,
+              filter: 'blur(5px)'
+            }}
             animate={{
-              scale: 0.85
+              scale: 0.85,
+              opacity: 1,
+              rotate: 0,
+              filter: 'blur(0px)'
+            }}
+            exit={{
+              scale: 0.8,
+              opacity: 0,
+              rotate: 2,
+              filter: 'blur(10px)'
             }}
             transition={{
-              duration: 9,
-              ease: "linear"
+              scale: {
+                duration: 9,
+                ease: "linear"
+              },
+              opacity: {
+                duration: 1,
+                ease: "easeOut"
+              },
+              rotate: {
+                duration: 2,
+                ease: "easeOut"
+              },
+              filter: {
+                duration: 1.5,
+                ease: "easeOut"
+              }
             }}
           >
             <div className="relative w-full h-full">
-              <video
+              <motion.video
                 ref={videoRef}
                 autoPlay
                 playsInline
                 muted={isMuted}
                 preload="auto"
                 className="w-full h-full object-contain md:object-cover"
+                initial={{ filter: 'brightness(0)' }}
+                animate={{ filter: 'brightness(1)' }}
+                transition={{ duration: 1, ease: "easeOut" }}
                 onLoadedData={handleVideoLoaded}
                 onError={handleVideoError}
                 onEnded={() => {
@@ -150,7 +185,7 @@ const IntroVideo = () => {
                 }}
               >
                 <source src="/intro.mp4" type="video/mp4" />
-              </video>
+              </motion.video>
               
               <button
                 onClick={toggleMute}
