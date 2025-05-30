@@ -18,22 +18,38 @@ const IntroVideo = ({ onEnd }: IntroVideoProps) => {
   const [canPlayVideo, setCanPlayVideo] = useState(false);
 
   useEffect(() => {
-    const preloadVideo = () => {
-      const video = new Audio('/intro.mp4');
-      video.preload = 'auto';
-    };
-
-    preloadVideo();
-  }, []);
-
-  useEffect(() => {
-    // 1 saniye sonra videoyu göster
     const timer = setTimeout(() => {
       setShowVideo(true);
+      if (videoRef.current) {
+        videoRef.current.load();
+      }
     }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (!videoRef.current) return;
+
+    const video = videoRef.current;
+
+    const handleCanPlay = () => {
+      if (video.paused) {
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {
+            // Otomatik oynatma engellendiyse sessiz modda dene
+            video.muted = true;
+            setIsMuted(true);
+            video.play().catch(console.error);
+          });
+        }
+      }
+    };
+
+    video.addEventListener('canplay', handleCanPlay);
+    return () => video.removeEventListener('canplay', handleCanPlay);
+  }, [showVideo]);
 
   useEffect(() => {
     // 3 saniye sonra şeffaflığı başlat
@@ -107,16 +123,27 @@ const IntroVideo = ({ onEnd }: IntroVideoProps) => {
     console.error('Video error:', e);
     setHasError(true);
     setShowVideo(false);
+    onEnd();
   };
 
   const handleVideoLoaded = () => {
     if (videoRef.current) {
-      videoRef.current.play().catch(error => {
-        console.error('Video playback failed:', error);
-        setHasError(true);
-        setShowVideo(false);
-        onEnd(); // Hata durumunda da içeriği göster
-      });
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.error('Video playback failed:', error);
+          // Otomatik oynatma engellendiyse sessiz modda dene
+          if (videoRef.current) {
+            videoRef.current.muted = true;
+            setIsMuted(true);
+            videoRef.current.play().catch(() => {
+              setHasError(true);
+              setShowVideo(false);
+              onEnd();
+            });
+          }
+        });
+      }
     }
   };
 
@@ -128,17 +155,14 @@ const IntroVideo = ({ onEnd }: IntroVideoProps) => {
   };
 
   const handleVideoEnded = () => {
-    // Önce videoyu kapat
     setShowVideo(false);
-    
-    // 1.5 saniye neural network animasyonunu göster, sonra içeriği getir
     setTimeout(() => {
       onEnd();
     }, 1500);
   };
 
   if (hasError) {
-    onEnd(); // Hata durumunda içeriği göster
+    onEnd();
     return null;
   }
 
@@ -171,83 +195,47 @@ const IntroVideo = ({ onEnd }: IntroVideoProps) => {
           }}
           className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
         >
-          <motion.div 
-            className="relative w-full h-full"
-            initial={{ 
-              scale: 1,
-              opacity: 0
-            }}
-            animate={{
-              scale: 0.85,
-              opacity: 1
-            }}
-            exit={{
-              scale: 0.8,
-              opacity: 0,
-              rotate: 2,
-              filter: 'blur(10px)'
-            }}
-            transition={{
-              scale: {
-                duration: 9,
-                ease: "linear"
-              },
-              opacity: {
+          <div className="relative w-full h-full">
+            <motion.video
+              ref={videoRef}
+              playsInline={true}
+              muted={isMuted}
+              preload="metadata"
+              autoPlay={true}
+              webkit-playsinline="true"
+              x5-playsinline="true"
+              className="w-full h-full object-contain md:object-cover"
+              style={{ objectFit: 'contain' }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{
+                scale: 0.7,
+                rotate: 5,
+                filter: 'blur(15px) brightness(0)',
+                opacity: 0
+              }}
+              transition={{ 
                 duration: 1,
-                ease: "easeOut"
-              }
-            }}
-          >
-            <div className="relative w-full h-full">
-              <motion.video
-                ref={videoRef}
-                playsInline
-                muted={isMuted}
-                preload="auto"
-                className="w-full h-full object-contain md:object-cover"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{
-                  scale: 0.7,
-                  rotate: 5,
-                  filter: 'blur(15px) brightness(0)',
-                  opacity: 0
-                }}
-                transition={{ 
-                  duration: 1,
-                  ease: "easeOut",
-                  exit: {
-                    duration: 1.2,
-                    ease: "easeInOut"
-                  }
-                }}
-                onLoadedData={handleVideoLoaded}
-                onError={handleVideoError}
-                onEnded={handleVideoEnded}
-              >
-                <source src="/intro.mp4" type="video/mp4" />
-              </motion.video>
+                ease: "easeOut",
+                exit: {
+                  duration: 1.2,
+                  ease: "easeInOut"
+                }
+              }}
+              onLoadedData={handleVideoLoaded}
+              onError={handleVideoError}
+              onEnded={handleVideoEnded}
+            >
+              <source src="/intro.mp4" type="video/mp4" />
+            </motion.video>
 
-              <div className="absolute bottom-4 w-full flex items-center justify-between px-4">
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                  className="text-[#00A3FF] text-lg md:text-xl font-medium tracking-wide"
-                  style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
-                >
-                  Redirecting to the website...
-                </motion.div>
-
-                <button
-                  onClick={toggleMute}
-                  className="p-2 rounded-full bg-black/50 hover:bg-black/70 transition-colors text-white"
-                >
-                  {isMuted ? <FaVolumeMute size={18} /> : <FaVolumeUp size={18} />}
-                </button>
-              </div>
-            </div>
-          </motion.div>
+            <button
+              onClick={toggleMute}
+              className="absolute bottom-4 right-4 p-2 rounded-full bg-black/50 hover:bg-black/70 transition-colors text-white"
+            >
+              {isMuted ? <FaVolumeMute size={18} /> : <FaVolumeUp size={18} />}
+            </button>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
