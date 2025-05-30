@@ -18,14 +18,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="antialiased">
-      <body className={`${inter.className} min-h-screen overflow-x-hidden`}>
-        <IntroVideo />
-        <NetworkAnimation />
-        <Header />
-        <main className="relative">
-        {children}
-        </main>
+    <html lang="en">
+      <body
+        className={`${inter.className} antialiased bg-[rgb(10,10,20)] text-white overflow-x-hidden min-h-screen`}
+      >
+        <div className="relative min-h-screen">
+          <div className="fixed inset-0 z-0">
+            <NetworkAnimation />
+          </div>
+          <div className="relative z-10">
+            {children}
+          </div>
+        </div>
       </body>
     </html>
   );

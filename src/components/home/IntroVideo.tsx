@@ -3,8 +3,12 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
 
-const IntroVideo = () => {
-  const [showVideo, setShowVideo] = useState(true);
+interface IntroVideoProps {
+  onEnd: () => void;
+}
+
+const IntroVideo = ({ onEnd }: IntroVideoProps) => {
+  const [showVideo, setShowVideo] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isTransparent, setIsTransparent] = useState(false);
@@ -20,6 +24,15 @@ const IntroVideo = () => {
     };
 
     preloadVideo();
+  }, []);
+
+  useEffect(() => {
+    // 1 saniye sonra videoyu göster
+    const timer = setTimeout(() => {
+      setShowVideo(true);
+    }, 1000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -98,18 +111,12 @@ const IntroVideo = () => {
 
   const handleVideoLoaded = () => {
     if (videoRef.current) {
-      // Video yüklendiğinde otomatik başlatma
-      if (canPlayVideo) {
-        videoRef.current.play().catch(error => {
-          console.error('Video playback failed:', error);
-          setHasError(true);
-          setShowVideo(false);
-        });
-      } else {
-        // Animasyonlar bitmeden video'yu durdur
-        videoRef.current.pause();
-        videoRef.current.currentTime = 0;
-      }
+      videoRef.current.play().catch(error => {
+        console.error('Video playback failed:', error);
+        setHasError(true);
+        setShowVideo(false);
+        onEnd(); // Hata durumunda da içeriği göster
+      });
     }
   };
 
@@ -120,7 +127,20 @@ const IntroVideo = () => {
     }
   };
 
-  if (hasError) return null;
+  const handleVideoEnded = () => {
+    // Önce videoyu kapat
+    setShowVideo(false);
+    
+    // 1.5 saniye neural network animasyonunu göster, sonra içeriği getir
+    setTimeout(() => {
+      onEnd();
+    }, 1500);
+  };
+
+  if (hasError) {
+    onEnd(); // Hata durumunda içeriği göster
+    return null;
+  }
 
   return (
     <AnimatePresence>
@@ -128,7 +148,7 @@ const IntroVideo = () => {
         <motion.div
           initial={{ 
             opacity: 0,
-            backgroundColor: 'rgba(0, 0, 0, 1)' 
+            backgroundColor: 'rgba(0, 0, 0, 0)'
           }}
           animate={{ 
             opacity: 1,
@@ -155,15 +175,11 @@ const IntroVideo = () => {
             className="relative w-full h-full"
             initial={{ 
               scale: 1,
-              opacity: 0,
-              rotate: -2,
-              filter: 'blur(5px)'
+              opacity: 0
             }}
             animate={{
               scale: 0.85,
-              opacity: 1,
-              rotate: 0,
-              filter: 'blur(0px)'
+              opacity: 1
             }}
             exit={{
               scale: 0.8,
@@ -179,14 +195,6 @@ const IntroVideo = () => {
               opacity: {
                 duration: 1,
                 ease: "easeOut"
-              },
-              rotate: {
-                duration: 2,
-                ease: "easeOut"
-              },
-              filter: {
-                duration: 1.5,
-                ease: "easeOut"
               }
             }}
           >
@@ -197,8 +205,8 @@ const IntroVideo = () => {
                 muted={isMuted}
                 preload="auto"
                 className="w-full h-full object-contain md:object-cover"
-                initial={{ filter: 'brightness(0)' }}
-                animate={{ filter: 'brightness(1)' }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 exit={{
                   scale: 0.7,
                   rotate: 5,
@@ -215,10 +223,7 @@ const IntroVideo = () => {
                 }}
                 onLoadedData={handleVideoLoaded}
                 onError={handleVideoError}
-                onEnded={() => {
-                  setIsTransparent(true);
-                  setTimeout(() => setShowVideo(false), 1500);
-                }}
+                onEnded={handleVideoEnded}
               >
                 <source src="/intro.mp4" type="video/mp4" />
               </motion.video>
