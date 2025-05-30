@@ -24,7 +24,7 @@ export default function RootLayout({
         <NetworkAnimation />
         <Header />
         <main className="relative">
-          {children}
+        {children}
         </main>
       </body>
     </html>

@@ -27,9 +27,9 @@ A modern, responsive personal website built with Next.js, TypeScript, and Tailwi
    npm install
    ```
 3. Start the development server:
-   ```bash
-   npm run dev
-   ```
+```bash
+npm run dev
+```
 4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ## Project Structure
