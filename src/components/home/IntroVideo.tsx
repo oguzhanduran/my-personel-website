@@ -11,6 +11,7 @@ const IntroVideo = () => {
   const [isEnding, setIsEnding] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const attemptRef = useRef(0);
+  const [canPlayVideo, setCanPlayVideo] = useState(false);
 
   useEffect(() => {
     const preloadVideo = () => {
@@ -74,6 +75,21 @@ const IntroVideo = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Animasyonların tamamlanması için 1 saniye bekle
+    const startVideoTimer = setTimeout(() => {
+      setCanPlayVideo(true);
+    }, 500);
+
+    return () => clearTimeout(startVideoTimer);
+  }, []);
+
+  useEffect(() => {
+    if (canPlayVideo && videoRef.current) {
+      videoRef.current.play().catch(console.error);
+    }
+  }, [canPlayVideo]);
+
   const handleVideoError = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
     console.error('Video error:', e);
     setHasError(true);
@@ -82,11 +98,18 @@ const IntroVideo = () => {
 
   const handleVideoLoaded = () => {
     if (videoRef.current) {
-      videoRef.current.play().catch(error => {
-        console.error('Video playback failed:', error);
-        setHasError(true);
-        setShowVideo(false);
-      });
+      // Video yüklendiğinde otomatik başlatma
+      if (canPlayVideo) {
+        videoRef.current.play().catch(error => {
+          console.error('Video playback failed:', error);
+          setHasError(true);
+          setShowVideo(false);
+        });
+      } else {
+        // Animasyonlar bitmeden video'yu durdur
+        videoRef.current.pause();
+        videoRef.current.currentTime = 0;
+      }
     }
   };
 
@@ -170,18 +193,31 @@ const IntroVideo = () => {
             <div className="relative w-full h-full">
               <motion.video
                 ref={videoRef}
-                autoPlay
                 playsInline
                 muted={isMuted}
                 preload="auto"
                 className="w-full h-full object-contain md:object-cover"
                 initial={{ filter: 'brightness(0)' }}
                 animate={{ filter: 'brightness(1)' }}
-                transition={{ duration: 1, ease: "easeOut" }}
+                exit={{
+                  scale: 0.7,
+                  rotate: 5,
+                  filter: 'blur(15px) brightness(0)',
+                  opacity: 0
+                }}
+                transition={{ 
+                  duration: 1,
+                  ease: "easeOut",
+                  exit: {
+                    duration: 1.2,
+                    ease: "easeInOut"
+                  }
+                }}
                 onLoadedData={handleVideoLoaded}
                 onError={handleVideoError}
                 onEnded={() => {
-                  setTimeout(() => setShowVideo(false), 1000);
+                  setIsTransparent(true);
+                  setTimeout(() => setShowVideo(false), 1500);
                 }}
               >
                 <source src="/intro.mp4" type="video/mp4" />
