@@ -33,11 +33,12 @@ export default function Contact() {
           transition={{ duration: 0.5 }}
           className="max-w-2xl mx-auto"
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-8 relative">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-8 relative inline-block">
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-md rounded-lg -z-10" />
             <span className="absolute inset-0 bg-gradient-to-r from-blue-600 via-cyan-500 to-emerald-500 bg-clip-text text-transparent blur-xl opacity-50">
               Contact Me
             </span>
-            <span className="relative bg-gradient-to-r from-blue-500 via-cyan-400 to-emerald-400 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+            <span className="relative bg-gradient-to-r from-blue-500 via-cyan-400 to-emerald-400 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(59,130,246,0.5)] px-4 py-2">
               Contact Me
             </span>
           </h1>
@@ -92,6 +93,4 @@ export default function Contact() {
           </form>
         </motion.div>
       </main>
-    </>
-  );
-} 
+    
