@@ -15,7 +15,6 @@ const Header = () => {
     setIsAnimating(true);
     setTimeout(() => {
       setIsAnimating(false);
-      // Logo tıklamasında videoyu göstermek için state'i sıfırla
       localStorage.removeItem('skipIntro');
       window.location.href = '/';
     }, 1000);
@@ -103,21 +102,30 @@ const Header = () => {
               } : { duration: 0.3 }}
             />
           </Link>
-          <div className="space-x-6">
+          <div className="space-x-8 max-sm:space-x-3">
             <Link 
               href="/" 
               onClick={() => localStorage.setItem('skipIntro', 'true')}
-              className="text-white/80 hover:text-white transition-colors"
+              className="text-lg font-medium text-white/80 hover:text-white transition-colors max-sm:text-sm"
             >
               Home
             </Link>
-            <Link href="/projects" className="text-white/80 hover:text-white transition-colors">
+            <Link 
+              href="/projects" 
+              className="text-lg font-medium text-white/80 hover:text-white transition-colors max-sm:text-sm"
+            >
               Projects
             </Link>
-            <Link href="/blog" className="text-white/80 hover:text-white transition-colors">
+            <Link 
+              href="/blog" 
+              className="text-lg font-medium text-white/80 hover:text-white transition-colors max-sm:text-sm"
+            >
               Blog
             </Link>
-            <Link href="/contact" className="text-white/80 hover:text-white transition-colors">
+            <Link 
+              href="/contact" 
+              className="text-lg font-medium text-white/80 hover:text-white transition-colors max-sm:text-sm"
+            >
               Contact
             </Link>
           </div>

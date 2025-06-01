@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
+import { FaVolumeUp, FaVolumeMute, FaForward } from 'react-icons/fa';
 
 interface IntroVideoProps {
   onEnd: () => void;
@@ -13,6 +13,7 @@ const IntroVideo = ({ onEnd }: IntroVideoProps) => {
   const [hasError, setHasError] = useState(false);
   const [isTransparent, setIsTransparent] = useState(false);
   const [isEnding, setIsEnding] = useState(false);
+  const [showSkip, setShowSkip] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const attemptRef = useRef(0);
   const [canPlayVideo, setCanPlayVideo] = useState(false);
@@ -119,6 +120,15 @@ const IntroVideo = ({ onEnd }: IntroVideoProps) => {
     }
   }, [canPlayVideo]);
 
+  useEffect(() => {
+    // 2 saniye sonra skip butonunu göster
+    const skipTimer = setTimeout(() => {
+      setShowSkip(true);
+    }, 2000);
+
+    return () => clearTimeout(skipTimer);
+  }, []);
+
   const handleVideoError = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
     console.error('Video error:', e);
     setHasError(true);
@@ -159,6 +169,11 @@ const IntroVideo = ({ onEnd }: IntroVideoProps) => {
     setTimeout(() => {
       onEnd();
     }, 1500);
+  };
+
+  const handleSkip = () => {
+    setShowVideo(false);
+    onEnd();
   };
 
   if (hasError) {
@@ -229,12 +244,31 @@ const IntroVideo = ({ onEnd }: IntroVideoProps) => {
               <source src="/intro.mp4" type="video/mp4" />
             </motion.video>
 
-            <button
-              onClick={toggleMute}
-              className="absolute bottom-4 right-4 p-2 rounded-full bg-black/50 hover:bg-black/70 transition-colors text-white"
-            >
-              {isMuted ? <FaVolumeMute size={18} /> : <FaVolumeUp size={18} />}
-            </button>
+            <div className="absolute bottom-4 right-4 flex items-center space-x-4">
+              <AnimatePresence>
+                {showSkip && (
+                  <motion.button
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleSkip}
+                    className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white flex items-center space-x-2 transition-colors"
+                  >
+                    <span>Skip</span>
+                    <FaForward size={14} />
+                  </motion.button>
+                )}
+              </AnimatePresence>
+
+              <button
+                onClick={toggleMute}
+                className="p-2 rounded-full bg-black/50 hover:bg-black/70 transition-colors text-white"
+              >
+                {isMuted ? <FaVolumeMute size={18} /> : <FaVolumeUp size={18} />}
+              </button>
+            </div>
           </div>
         </motion.div>
       )}
