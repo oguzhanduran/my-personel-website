@@ -63,8 +63,13 @@ export default function Blog() {
           transition={{ duration: 0.5 }}
           className="max-w-6xl mx-auto"
         >
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-500 bg-clip-text text-transparent mb-8">
-            Blog Posts
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-8 relative">
+            <span className="absolute inset-0 bg-gradient-to-r from-blue-600 via-cyan-500 to-emerald-500 bg-clip-text text-transparent blur-xl opacity-50">
+              Blog Posts
+            </span>
+            <span className="relative bg-gradient-to-r from-blue-500 via-cyan-400 to-emerald-400 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+              Blog Posts
+            </span>
           </h1>
           
           <motion.div
