@@ -38,46 +38,49 @@ export default function Contact() {
           </h1>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="name" className="block text-white mb-2">Name</label>
+              <label htmlFor="name" className="block text-white/90 mb-2 text-lg">Name</label>
               <input
                 type="text"
                 id="name"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 text-white placeholder-white/50 backdrop-blur-sm transition-colors"
                 required
+                placeholder="Enter your name"
               />
             </div>
             <div>
-              <label htmlFor="email" className="block text-white mb-2">Email</label>
+              <label htmlFor="email" className="block text-white/90 mb-2 text-lg">Email</label>
               <input
                 type="email"
                 id="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 text-white placeholder-white/50 backdrop-blur-sm transition-colors"
                 required
+                placeholder="Enter your email"
               />
             </div>
             <div>
-              <label htmlFor="message" className="block text-white mb-2">Message</label>
+              <label htmlFor="message" className="block text-white/90 mb-2 text-lg">Message</label>
               <textarea
                 id="message"
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
                 rows={6}
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white resize-none"
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 text-white placeholder-white/50 backdrop-blur-sm transition-colors resize-none"
                 required
+                placeholder="Write your message here..."
               />
             </div>
             <motion.button
               type="submit"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full bg-gradient-to-r from-blue-500 via-cyan-500 to-purple-600 text-white py-3 rounded-lg hover:opacity-90 transition-opacity"
+              className="w-full bg-gradient-to-r from-blue-500 via-cyan-500 to-purple-600 text-white py-4 rounded-lg hover:opacity-90 transition-all text-lg font-medium shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
             >
               Send Message
             </motion.button>
