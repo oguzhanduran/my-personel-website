@@ -93,4 +93,6 @@ export default function Contact() {
           </form>
         </motion.div>
       </main>
-    
+    </>
+  );
+} 
